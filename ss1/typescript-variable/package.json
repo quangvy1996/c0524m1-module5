@@ -1,0 +1,13 @@
+{
+  "name": "c0524m1-module5",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node yc1.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module"
+}
