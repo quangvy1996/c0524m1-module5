@@ -6,7 +6,9 @@ class App extends Component {
         super(props);
         this.state = {
             list: [],
-            item: ''
+            item: '',
+            isEditing: false,
+            currentIndex: null,
         };
     }
 
@@ -17,18 +19,44 @@ class App extends Component {
     }
 
     handleAddItem = () => {
-        const { list, item } = this.state;
+        const { list, item, isEditing, currentIndex } = this.state;
 
         if (item.trim()) {
-            this.setState({
+            if(isEditing) {
+                const updateList = list.map((todo,index) =>
+                index === currentIndex ? item : todo);
+                this.setState({
+                    list: updateList,
+                    item:'',
+                    isEditing: false,
+                    currentIndex: null
+                })
+            }
+                else {this.setState({
                 list: [...list, item],
                 item: ''
             });
+                }
         }
+    }
+    handleDeleteItem = (index) => {
+        const {list} = this.state;
+        const updateList = list.filter((_, i) => i !== index);
+        this.setState({
+            list: updateList
+        });
+    }
+    handleEditItem = (index) => {
+        const {list} = this.state;
+        this.setState({
+            item: list[index],
+            isEditing: true,
+            currentIndex: index
+        })
     }
 
     render() {
-        const { list, item } = this.state;
+        const { list, item, isEditing } = this.state;
 
         return (
             <div>
@@ -39,10 +67,16 @@ class App extends Component {
                     onChange={this.handleChange}
                     placeholder="Add a new list"
                 />
-                <button onClick={this.handleAddItem}>Add</button>
+                <button onClick={this.handleAddItem}>
+                    {isEditing ? 'Update' : 'Add'}
+                </button>
                 <ul>
                     {list.map((todo, index) => (
-                        <li key={index}>{todo}</li>
+                        <li key={index}>
+                            {todo}
+                            <button onClick={() => this.handleEditItem(index)}>Edit</button>
+                            <button onClick={() => this.handleDeleteItem(index)}>Delete</button>
+                        </li>
                     ))}
                 </ul>
             </div>
